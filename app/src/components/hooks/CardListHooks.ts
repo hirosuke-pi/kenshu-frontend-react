@@ -17,11 +17,11 @@ export const useCardList = () => {
   return {
     status,
     tasks: data?.tasks as Task[] | undefined,
-    error: error as any,
+    error: (error as any)?.message as string | undefined,
   };
 };
 
 const fetchTasks = async () => {
-  const res = await fetch("http://localhost:8000/api/tasks");
+  const res = await fetch("http://localhost:8000/api/tasks1");
   return res.json();
 };
