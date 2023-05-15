@@ -9,7 +9,7 @@ const Header = () => {
         </Heading>
       </Center>
       <Center mt={20}>
-        <Divider w="80%" />
+        <Divider />
       </Center>
     </>
   );

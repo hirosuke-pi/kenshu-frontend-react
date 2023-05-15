@@ -10,7 +10,7 @@ import {
   Divider,
   Center,
 } from "@chakra-ui/react";
-import { CheckIcon } from "@chakra-ui/icons";
+import { CheckIcon, CalendarIcon } from "@chakra-ui/icons";
 import moment from "moment";
 
 import taskImage from "../../public/images/task.jpg";
@@ -27,7 +27,9 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
         alt="Task Image"
       />
       <CardBody>
-        <Heading size="md">{task.title}</Heading>
+        <Heading size="md">
+          <CalendarIcon mb={3} mr={3} /> {task.title}
+        </Heading>
         <Text mt={10}>作成日時:</Text>
         <Text>{moment(task.createdAt).format("YYYY年MM月DD日 HH:mm:ss")}</Text>
       </CardBody>
