@@ -1,5 +1,10 @@
-import classNames from './App.module.css';
+import { ChakraProvider } from "@chakra-ui/react";
+import MainSence from "./components/pages/MainSence";
 
 export const App = () => {
-  return <h1 className={classNames.heading}>Hello React!</h1>;
+  return (
+    <ChakraProvider>
+      <MainSence />
+    </ChakraProvider>
+  );
 };
