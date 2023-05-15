@@ -22,6 +22,6 @@ export const useCardList = () => {
 };
 
 const fetchTasks = async () => {
-  const res = await fetch("http://localhost:8000/api/tasks1");
+  const res = await fetch("http://localhost:8000/api/tasks");
   return res.json();
 };
