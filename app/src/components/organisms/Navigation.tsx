@@ -1,7 +1,7 @@
 import { Heading } from "@chakra-ui/react";
 
 const Navigation = () => {
-  return <Heading>Hello World!</Heading>;
+  return <></>;
 };
 
 export default Navigation;
