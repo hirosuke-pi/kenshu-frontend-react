@@ -11,9 +11,11 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
+import moment from "moment";
+
 import taskImage from "../../public/images/task.jpg";
 
-const CustomCard = () => {
+const CustomCard = ({ task }): JSX.Element => {
   return (
     <Card maxW={300} maxH={500} m={10} overflow={"hidden"}>
       <Image
@@ -24,8 +26,9 @@ const CustomCard = () => {
         alt="Task Image"
       />
       <CardBody>
-        <Heading size="md">今日のタスク1</Heading>
-        <Text mt={10}>作成日時: 2023/5/15</Text>
+        <Heading size="md">{task.title}</Heading>
+        <Text mt={10}>作成日時:</Text>
+        <Text>{moment(task.createdAt).format("YYYY年MM月DD日 HH:mm:ss")}</Text>
       </CardBody>
       <Center>
         <Divider w="90%" />
