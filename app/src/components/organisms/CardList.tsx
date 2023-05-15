@@ -21,7 +21,7 @@ const CardList = () => {
  * @returns 状態のエレメント
  */
 const CreateCardList = (): JSX.Element => {
-  const { status, data, error } = useCardList();
+  const { status, tasks, error } = useCardList();
 
   return (
     <>
@@ -37,7 +37,7 @@ const CreateCardList = (): JSX.Element => {
         </>
       )}
       {status === "success" &&
-        data.tasks.map((task) => <CustomCard task={task} key={task.id} />)}
+        tasks.map((task) => <CustomCard task={task} key={task.id} />)}
     </>
   );
 };

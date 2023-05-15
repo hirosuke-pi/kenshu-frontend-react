@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Task {
   id: string;
@@ -8,10 +8,17 @@ export interface Task {
 }
 
 export const useCardList = () => {
-  const { status, data, error } = useQuery("tasks", fetchTasks);
+  const { status, data, error } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
+  });
   console.log(status, data, error);
 
-  return { status, data, error: error as any };
+  return {
+    status,
+    tasks: data?.tasks as Task[] | undefined,
+    error: error as any,
+  };
 };
 
 const fetchTasks = async () => {

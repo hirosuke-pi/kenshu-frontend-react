@@ -14,8 +14,9 @@ import { CheckIcon } from "@chakra-ui/icons";
 import moment from "moment";
 
 import taskImage from "../../public/images/task.jpg";
+import { Task } from "../hooks/CardListHooks";
 
-const CustomCard = ({ task }): JSX.Element => {
+const CustomCard = ({ task }: { task: Task }): JSX.Element => {
   return (
     <Card maxW={300} maxH={500} m={10} overflow={"hidden"}>
       <Image
