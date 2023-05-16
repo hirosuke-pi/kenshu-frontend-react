@@ -1,7 +1,7 @@
 import {
   Heading,
   Card,
-  CardHeader,
+  Box,
   CardBody,
   CardFooter,
   Text,
@@ -9,8 +9,14 @@ import {
   Image,
   Divider,
   Center,
+  Flex,
 } from "@chakra-ui/react";
-import { CheckIcon, CalendarIcon } from "@chakra-ui/icons";
+import {
+  CheckIcon,
+  CalendarIcon,
+  DeleteIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
 import moment from "moment";
 
 import taskImage from "../../public/images/task.jpg";
@@ -37,12 +43,27 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
         <Divider w="90%" />
       </Center>
       <CardFooter>
-        <IconButton
-          colorScheme="green"
-          variant="outline"
-          aria-label="Send email"
-          icon={<CheckIcon />}
-        />
+        <Flex justifyContent="space-between" width="100%">
+          <IconButton
+            colorScheme="green"
+            variant="outline"
+            aria-label="Task Done"
+            icon={<CheckIcon />}
+          />
+          <Box>
+            <IconButton
+              mr={10}
+              colorScheme="blue"
+              aria-label="Task Edit"
+              icon={<EditIcon />}
+            />
+            <IconButton
+              colorScheme="red"
+              aria-label="Task Remove"
+              icon={<DeleteIcon />}
+            />
+          </Box>
+        </Flex>
       </CardFooter>
     </Card>
   );

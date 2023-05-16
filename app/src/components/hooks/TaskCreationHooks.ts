@@ -1,50 +1,33 @@
 import { useState } from "react";
-import axios from "axios";
-
-type TaskCreationStatus =
-  | "idle"
-  | "loading"
-  | "success"
-  | "responseError"
-  | "validationError";
+import { TaskCreationStatus } from "../organisms/TaskFormModal";
 
 export const useCreateTaskForm = () => {
-  const [taskName, setTaskName] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState<TaskCreationStatus>("idle");
 
   return {
     actions: {
-      setTaskName,
+      setModalVisible,
       setStatus,
-      onSubmit,
+      postTask,
     },
     values: {
-      taskName,
+      modalVisible,
       status,
     },
   };
 };
 
-const onSubmit = ({
+const postTask = async ({
   taskName,
-  responseEvent,
 }: {
   taskName: string;
-  responseEvent: (isSuccess: boolean) => void;
-}) => {
-  fetch("http://localhost:8000/api/tasks", {
+}): Promise<Response> => {
+  return fetch("http://localhost:8000/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ title: taskName }),
-  })
-    .then((res) => {
-      console.log(res);
-      responseEvent(true);
-    })
-    .catch((err) => {
-      console.error(err);
-      responseEvent(false);
-    });
+  });
 };
