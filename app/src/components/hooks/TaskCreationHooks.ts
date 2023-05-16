@@ -1,22 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
-export interface Task {
-  id: string;
-  title: string;
-  createdAt: string;
-  finishedAt: string | null;
-}
 
-export const useTaskCreation = () => {
+type TaskCreationStatus =
+  | "idle"
+  | "loading"
+  | "success"
+  | "responseError"
+  | "validationError";
+
+export const useCreateTaskForm = () => {
   const [taskName, setTaskName] = useState("");
-  const [status, setStatus] = useState(
-    "idle" as
-      | "idle"
-      | "loading"
-      | "success"
-      | "responseError"
-      | "validationError"
-  );
+  const [status, setStatus] = useState<TaskCreationStatus>("idle");
 
   return {
     actions: {
@@ -38,16 +32,19 @@ const onSubmit = ({
   taskName: string;
   responseEvent: (isSuccess: boolean) => void;
 }) => {
-  axios
-    .post("http://localhost:8000/api/tasks", {
-      title: taskName,
-    })
+  fetch("http://localhost:8000/api/tasks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title: taskName }),
+  })
     .then((res) => {
-      console.log(res.data);
+      console.log(res);
       responseEvent(true);
     })
     .catch((err) => {
-      console.error(err.response);
+      console.error(err);
       responseEvent(false);
     });
 };

@@ -20,7 +20,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { AddIcon, CalendarIcon } from "@chakra-ui/icons";
-import { useTaskCreation } from "../hooks/TaskCreationHooks";
+import { useCreateTaskForm } from "../hooks/TaskCreationHooks";
 
 const CreateTaskModal = ({
   isOpen,
@@ -31,7 +31,7 @@ const CreateTaskModal = ({
 }) => {
   const queryClient = useQueryClient();
   const toast = useToast();
-  const { actions, values } = useTaskCreation();
+  const { actions, values } = useCreateTaskForm();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -63,33 +63,15 @@ const CreateTaskModal = ({
               width="100%"
               colorScheme="blue"
               mr={3}
-              onClick={() => {
-                if (values.taskName === "") {
-                  return;
-                }
-                actions.setStatus("loading");
-                actions.onSubmit({
-                  taskName: values.taskName,
-                  responseEvent: (isSuccess) => {
-                    if (!isSuccess) {
-                      actions.setStatus("responseError");
-                      return;
-                    }
-
-                    actions.setStatus("success");
-                    toast({
-                      description: "タスクを登録しました",
-                      status: "success",
-                      duration: 5000,
-                      isClosable: true,
-                    });
-                    queryClient.invalidateQueries({
-                      queryKey: ["tasks"],
-                    });
-                    onClose();
-                  },
-                });
-              }}
+              onClick={() =>
+                onClick({
+                  values,
+                  actions,
+                  onClose,
+                  queryClient,
+                  toast,
+                })
+              }
             >
               {values.status === "loading" ? (
                 <>
@@ -113,6 +95,34 @@ const CreateTaskModal = ({
       </ModalContent>
     </Modal>
   );
+};
+
+const onClick = ({ values, actions, onClose, queryClient, toast }) => {
+  if (values.taskName === "") {
+    return;
+  }
+  actions.setStatus("loading");
+  actions.onSubmit({
+    taskName: values.taskName,
+    responseEvent: (isSuccess) => {
+      if (!isSuccess) {
+        actions.setStatus("responseError");
+        return;
+      }
+
+      actions.setStatus("success");
+      toast({
+        description: "タスクを登録しました",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+      onClose();
+    },
+  });
 };
 
 export default CreateTaskModal;
