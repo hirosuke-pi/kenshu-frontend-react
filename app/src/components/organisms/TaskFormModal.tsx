@@ -43,7 +43,7 @@ const TaskFormModal = ({
   onClose: () => void;
   onSubmit: (taskName: string) => void;
 }) => {
-  const [taskName, setTaskName] = useState("");
+  const [taskName, setTaskName] = useState(defaultValue);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
