@@ -6,7 +6,7 @@ const Footer = () => {
       <Center mt={20}>
         <Divider />
       </Center>
-      <Center mt={20}>
+      <Center mt={20} mb={50}>
         <Text fontSize="md">hirosuke-pi</Text>
       </Center>
     </>

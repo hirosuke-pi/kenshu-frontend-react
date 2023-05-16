@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Modal,
   ModalOverlay,
@@ -28,6 +29,7 @@ const CreateTaskModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const toast = useToast();
   const { actions, values } = useTaskCreation();
 
@@ -80,6 +82,9 @@ const CreateTaskModal = ({
                       status: "success",
                       duration: 5000,
                       isClosable: true,
+                    });
+                    queryClient.invalidateQueries({
+                      queryKey: ["tasks"],
                     });
                     onClose();
                   },

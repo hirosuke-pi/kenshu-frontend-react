@@ -6,7 +6,7 @@ import { WarningTwoIcon } from "@chakra-ui/icons";
 const CardList = () => {
   return (
     <Center background={"gray.100"} mt={20} rounded={10}>
-      <Flex mt={30} mb={30} justifyContent="flex-start" wrap="wrap">
+      <Flex mt={30} mb={30} justifyContent="center" wrap="wrap">
         <CreateCardList />
       </Flex>
     </Center>
