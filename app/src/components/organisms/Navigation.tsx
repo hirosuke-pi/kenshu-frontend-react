@@ -10,6 +10,38 @@ const Navigation = () => {
   const toast = useToast();
   const { actions, values } = useCreateTaskForm();
 
+  const onSubmit = (taskName: string) => {
+    if (taskName === "") {
+      actions.setStatus("validationError");
+      return;
+    }
+    actions.setStatus("loading");
+
+    actions
+      .postTask({
+        taskName,
+      })
+      .then((response) => {
+        console.log(response.body);
+        queryClient.invalidateQueries({
+          queryKey: ["tasks"],
+        });
+
+        actions.setModalVisible(false);
+        actions.setStatus("success");
+        toast({
+          title: "タスクを作成しました",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error.response);
+        actions.setStatus("responseError");
+      });
+  };
+
   return (
     <Flex width="100%" justifyContent="flex-end" mt={10}>
       <Button
@@ -26,37 +58,7 @@ const Navigation = () => {
         modalTitle="タスクを新規作成"
         status={values.status}
         onClose={() => actions.setModalVisible(false)}
-        onSubmit={(taskName: string) => {
-          if (taskName === "") {
-            actions.setStatus("validationError");
-            return;
-          }
-          actions.setStatus("loading");
-
-          actions
-            .postTask({
-              taskName,
-            })
-            .then((response) => {
-              console.log(response.body);
-              queryClient.invalidateQueries({
-                queryKey: ["tasks"],
-              });
-
-              actions.setModalVisible(false);
-              actions.setStatus("success");
-              toast({
-                title: "タスクを作成しました",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              });
-            })
-            .catch((error) => {
-              console.error(error.response);
-              actions.setStatus("responseError");
-            });
-        }}
+        onSubmit={onSubmit}
       />
     </Flex>
   );
