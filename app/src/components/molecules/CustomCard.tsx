@@ -27,6 +27,7 @@ import taskImage from "../../public/images/task.jpg";
 import { Task } from "../hooks/CardListHooks";
 import { useEditTaskForm } from "../hooks/TaskEditHooks";
 import { TaskFormModal } from "../organisms";
+import { getDatetimeJp } from "../../lib/datetime";
 
 const CustomCard = ({ task }: { task: Task }): JSX.Element => {
   const queryClient = useQueryClient();
@@ -98,10 +99,6 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
           isClosable: true,
         });
       });
-  };
-
-  const getDatetimeJp = (datetime: string) => {
-    return moment(datetime).format("YYYY年MM月DD日 HH:mm:ss");
   };
 
   return (
