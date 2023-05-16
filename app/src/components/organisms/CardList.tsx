@@ -5,8 +5,8 @@ import { WarningTwoIcon } from "@chakra-ui/icons";
 
 const CardList = () => {
   return (
-    <Center>
-      <Flex width="80%" mt={30} justifyContent="flex-start" wrap="wrap">
+    <Center background={"gray.100"} mt={20} rounded={10}>
+      <Flex mt={30} mb={30} justifyContent="center" wrap="wrap">
         <CreateCardList />
       </Flex>
     </Center>
@@ -33,7 +33,7 @@ const CreateCardList = (): JSX.Element => {
       {status === "error" && (
         <>
           <WarningTwoIcon mt={3} mr={5} />
-          <Text>データの取得に失敗しました。 ({error.message})</Text>
+          <Text>データの取得に失敗しました。 ({error})</Text>
         </>
       )}
       {status === "success" &&

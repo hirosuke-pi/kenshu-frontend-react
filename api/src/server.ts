@@ -30,7 +30,8 @@ app.get('/api/tasks', async (c) => {
 
 // POST: /api/tasks
 app.post('/api/tasks', async (c) => {
-  const task = await db.task.create({ data: {} });
+  const param = await c.req.json<{ title: string }>();
+  const task = await db.task.create({ data: { title: param.title } });
 
   c.status(201);
   return c.json({

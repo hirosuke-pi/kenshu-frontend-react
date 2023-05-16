@@ -4,9 +4,9 @@ const Footer = () => {
   return (
     <>
       <Center mt={20}>
-        <Divider w="80%" />
+        <Divider />
       </Center>
-      <Center mt={20}>
+      <Center mt={20} mb={50}>
         <Text fontSize="md">hirosuke-pi</Text>
       </Center>
     </>

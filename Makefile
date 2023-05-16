@@ -7,7 +7,7 @@ init:
 
 .PHONY: start
 start:
-	pnpm --filter api start
+	pnpm --filter api build
 
 .PHONY: open-db
 open-db:
