@@ -2,6 +2,6 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Navigation from "./Navigation";
 import CardList from "./CardList";
-import FormModal from "./FormModal";
+import CreateTaskModal from "./CreateTaskModal";
 
-export { Header, Footer, Navigation, CardList, FormModal };
+export { Header, Footer, Navigation, CardList, CreateTaskModal };

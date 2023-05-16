@@ -33,7 +33,7 @@ const CreateCardList = (): JSX.Element => {
       {status === "error" && (
         <>
           <WarningTwoIcon mt={3} mr={5} />
-          <Text>データの取得に失敗しました。 ({error.message})</Text>
+          <Text>データの取得に失敗しました。 ({error})</Text>
         </>
       )}
       {status === "success" &&
