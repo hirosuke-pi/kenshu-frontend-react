@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon, CalendarIcon } from "@chakra-ui/icons";
 
-export type TaskCreationStatus =
+export type FormStatus =
   | "idle"
   | "loading"
   | "success"
@@ -38,7 +38,7 @@ const TaskFormModal = ({
 }: {
   isOpen: boolean;
   modalTitle: string;
-  status: TaskCreationStatus;
+  status: FormStatus;
   defaultValue?: string;
   onClose: () => void;
   onSubmit: (taskName: string) => void;

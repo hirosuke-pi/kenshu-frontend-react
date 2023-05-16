@@ -1,9 +1,9 @@
-import { Heading, Divider, Center } from "@chakra-ui/react";
+import { Heading, Divider, Center, Box } from "@chakra-ui/react";
 
 const Header = () => {
   return (
-    <>
-      <Center mt={100}>
+    <Box mt={100}>
+      <Center>
         <Heading as="h1" size="3xl">
           My Task List
         </Heading>
@@ -11,7 +11,7 @@ const Header = () => {
       <Center mt={20}>
         <Divider />
       </Center>
-    </>
+    </Box>
   );
 };
 
