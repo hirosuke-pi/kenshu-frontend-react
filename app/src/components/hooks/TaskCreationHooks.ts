@@ -38,17 +38,16 @@ const onSubmit = ({
   taskName: string;
   responseEvent: (isSuccess: boolean) => void;
 }) => {
-  console.log(taskName);
   axios
     .post("http://localhost:8000/api/tasks", {
       title: taskName,
     })
     .then((res) => {
-      console.log(res);
+      console.log(res.data);
       responseEvent(true);
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err.response);
       responseEvent(false);
     });
 };
