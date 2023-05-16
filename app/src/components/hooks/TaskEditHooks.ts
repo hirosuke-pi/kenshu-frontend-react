@@ -22,15 +22,17 @@ export const useEditTaskForm = () => {
 const patchTask = async ({
   id,
   taskName,
+  finishedAt = null,
 }: {
   id: string;
   taskName: string;
+  finishedAt?: string;
 }): Promise<Response> => {
   return fetch(`http://localhost:8000/api/tasks/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title: taskName }),
+    body: JSON.stringify({ title: taskName, finishedAt }),
   });
 };
