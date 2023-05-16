@@ -26,22 +26,24 @@ import { useQueryClient } from "@tanstack/react-query";
 import taskImage from "../../public/images/task.jpg";
 import { Task } from "../hooks/CardListHooks";
 import { useEditTaskForm } from "../hooks/TaskEditHooks";
-import { TaskFormModal } from "../organisms";
+import { TaskFormModal, ConfilmDialog } from "../organisms";
 import { getDatetimeJp } from "../../lib/datetime";
+import { useRemoveTaskForm } from "../hooks/RemoveTaskHooks";
 
 const CustomCard = ({ task }: { task: Task }): JSX.Element => {
   const queryClient = useQueryClient();
   const toast = useToast();
-  const { actions, values } = useEditTaskForm();
+  const editProps = useEditTaskForm();
+  const removeProps = useRemoveTaskForm();
 
   const onSubmit = (taskName: string) => {
     if (taskName === "") {
-      actions.setStatus("validationError");
+      editProps.actions.setStatus("validationError");
       return;
     }
-    actions.setStatus("loading");
+    editProps.actions.setStatus("loading");
 
-    actions
+    editProps.actions
       .patchTask({
         id: task.id,
         taskName,
@@ -52,8 +54,8 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
           queryKey: ["tasks"],
         });
 
-        actions.setModalVisible(false);
-        actions.setStatus("success");
+        editProps.actions.setModalVisible(false);
+        editProps.actions.setStatus("success");
         toast({
           title: "タスクを編集しました",
           status: "success",
@@ -63,13 +65,13 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
       })
       .catch((error) => {
         console.error(error.response);
-        actions.setStatus("responseError");
+        editProps.actions.setStatus("responseError");
       });
   };
 
   const onTaskDone = () => {
     const finishedAt = task.finishedAt ? null : moment().toISOString();
-    actions
+    editProps.actions
       .patchTask({
         id: task.id,
         taskName: task.title,
@@ -81,8 +83,8 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
           queryKey: ["tasks"],
         });
 
-        actions.setModalVisible(false);
-        actions.setStatus("success");
+        editProps.actions.setModalVisible(false);
+        editProps.actions.setStatus("success");
         toast({
           title: "タスクを更新しました。",
           status: "success",
@@ -94,6 +96,34 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
         console.error(error.response);
         toast({
           title: "タスク完了中にエラーが発生しました。",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+  };
+
+  const onTaskRemove = () => {
+    removeProps.actions.onClose();
+    removeProps.actions
+      .deleteTask(task.id)
+      .then((response) => {
+        console.log(response.body);
+        queryClient.invalidateQueries({
+          queryKey: ["tasks"],
+        });
+
+        toast({
+          title: `タスク「${task.title}」を削除しました。`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        console.error(error.response);
+        toast({
+          title: "タスク削除中にエラーが発生しました。",
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -155,20 +185,27 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
               colorScheme="blue"
               aria-label="Task Edit"
               icon={<EditIcon />}
-              onClick={() => actions.setModalVisible(true)}
+              onClick={() => editProps.actions.setModalVisible(true)}
+            />
+            <TaskFormModal
+              isOpen={editProps.values.modalVisible}
+              modalTitle="タスクを編集"
+              status={editProps.values.status}
+              defaultValue={task.title}
+              onClose={() => editProps.actions.setModalVisible(false)}
+              onSubmit={onSubmit}
             />
             <IconButton
               colorScheme="red"
               aria-label="Task Remove"
               icon={<DeleteIcon />}
+              onClick={removeProps.actions.onOpen}
             />
-            <TaskFormModal
-              isOpen={values.modalVisible}
-              modalTitle="タスクを編集"
-              status={values.status}
-              defaultValue={task.title}
-              onClose={() => actions.setModalVisible(false)}
-              onSubmit={onSubmit}
+            <ConfilmDialog
+              isOpen={removeProps.values.isOpen}
+              onClose={removeProps.actions.onClose}
+              onRemove={onTaskRemove}
+              taskName={task.title}
             />
           </Box>
         </Flex>
