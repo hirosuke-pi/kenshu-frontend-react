@@ -47,12 +47,10 @@ export const useRemoveTaskForm = ({ task }: RemoveTaskFormHookProps) => {
       onOpen,
       onClose,
       deleteTask,
-      toast,
       onTaskRemove,
     },
     values: {
       isOpen,
-      queryClient,
     },
   };
 };
