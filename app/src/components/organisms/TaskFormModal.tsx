@@ -59,7 +59,7 @@ const TaskFormModal = ({
             <FormLabel>タスク名</FormLabel>
             <Input
               type="text"
-              defaultValue={defaultValue}
+              defaultValue={taskName}
               onChange={(event) => setTaskName(event.target.value)}
             />
             <FormErrorMessage>タスク名は必須です</FormErrorMessage>
@@ -78,7 +78,6 @@ const TaskFormModal = ({
               mr={3}
               onClick={() => {
                 onSubmit(taskName);
-                setTaskName("");
               }}
             >
               {status === "loading" ? (

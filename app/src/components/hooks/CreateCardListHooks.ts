@@ -4,20 +4,22 @@ export interface Task {
   id: string;
   title: string;
   createdAt: string;
-  finishedAt: string | null;
+  finishedAt?: string | null;
 }
 
-export const useCardList = () => {
+export const useCreateCardList = () => {
   const { status, data, error } = useQuery({
     queryKey: ["tasks"],
     queryFn: fetchTasks,
   });
-  console.log(status, data, error);
 
   return {
-    status,
-    tasks: data?.tasks as Task[] | undefined,
-    error: (error as any)?.message as string | undefined,
+    actions: {},
+    values: {
+      status,
+      tasks: data?.tasks as Task[] | undefined,
+      error: (error as any)?.message as string | undefined,
+    },
   };
 };
 

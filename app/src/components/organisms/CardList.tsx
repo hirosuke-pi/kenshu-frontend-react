@@ -1,7 +1,8 @@
 import { Center, Flex, Text, Spinner } from "@chakra-ui/react";
-import { CustomCard } from "../molecules";
-import { useCardList } from "../hooks/CardListHooks";
 import { WarningTwoIcon } from "@chakra-ui/icons";
+
+import { CustomCard } from "../molecules";
+import { useCreateCardList } from "../hooks";
 
 const CardList = () => {
   return (
@@ -21,23 +22,23 @@ const CardList = () => {
  * @returns 状態のエレメント
  */
 const CreateCardList = (): JSX.Element => {
-  const { status, tasks, error } = useCardList();
+  const { values } = useCreateCardList();
 
   return (
     <>
-      {status === "loading" && (
+      {values.status === "loading" && (
         <>
           <Spinner mr={10} /> データを取得中...
         </>
       )}
-      {status === "error" && (
+      {values.status === "error" && (
         <>
           <WarningTwoIcon mt={3} mr={5} />
-          <Text>データの取得に失敗しました。 ({error})</Text>
+          <Text>データの取得に失敗しました。 ({values.error})</Text>
         </>
       )}
-      {status === "success" &&
-        tasks.map((task) => <CustomCard task={task} key={task.id} />)}
+      {values.status === "success" &&
+        values.tasks.map((task) => <CustomCard task={task} key={task.id} />)}
     </>
   );
 };
