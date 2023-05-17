@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { Center, Flex, Text, Spinner } from "@chakra-ui/react";
 import { WarningTwoIcon } from "@chakra-ui/icons";
 
@@ -8,38 +10,42 @@ const CardList = () => {
   return (
     <Center background={"gray.100"} mt={20} rounded={10}>
       <Flex mt={30} mb={30} justifyContent="center" wrap="wrap">
-        <CreateCardList />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={<LoadingFallback />}>
+            <CreateCardList />
+          </Suspense>
+        </ErrorBoundary>
       </Flex>
     </Center>
   );
 };
 
-/**
- * カードリストを作成する
- * 成功 -> タスクリストを表示
- * 読み込み中 -> スピナーを表示
- * 失敗 -> エラーを表示
- * @returns 状態のエレメント
- */
 const CreateCardList = (): JSX.Element => {
   const { values } = useCreateCardList();
 
   return (
     <>
-      {values.status === "loading" && (
-        <>
-          <Spinner mr={10} /> データを取得中...
-        </>
-      )}
-      {values.status === "error" && (
-        <>
-          <WarningTwoIcon mt={3} mr={5} />
-          <Text>データの取得に失敗しました。 ({values.error})</Text>
-        </>
-      )}
-      {values.status === "success" &&
-        values.tasks.map((task) => <CustomCard task={task} key={task.id} />)}
+      {values.tasks.map((task) => (
+        <CustomCard task={task} key={task.id} />
+      ))}
     </>
+  );
+};
+
+const LoadingFallback = (): JSX.Element => {
+  return (
+    <>
+      <Spinner mr={10} /> データを取得中...
+    </>
+  );
+};
+
+const ErrorFallback = ({ error }: FallbackProps): JSX.Element => {
+  return (
+    <Flex justifyContent="center" alignItems="center">
+      <WarningTwoIcon mr={5} />
+      <Text>データの取得に失敗しました。 ({error.message})</Text>
+    </Flex>
   );
 };
 
