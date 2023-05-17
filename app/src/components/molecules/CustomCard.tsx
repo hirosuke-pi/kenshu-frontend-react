@@ -47,6 +47,7 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
       .patchTask({
         id: task.id,
         taskName,
+        finishedAt: task.finishedAt,
       })
       .then((response) => {
         console.log(response.body);

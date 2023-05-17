@@ -4,7 +4,7 @@ export interface Task {
   id: string;
   title: string;
   createdAt: string;
-  finishedAt: string | null;
+  finishedAt?: string | null;
 }
 
 export const useCardList = () => {

@@ -7,7 +7,9 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Button,
+  Text,
 } from "@chakra-ui/react";
+import { WarningIcon } from "@chakra-ui/icons";
 
 const ConfilmDialog = ({
   isOpen,
@@ -31,18 +33,20 @@ const ConfilmDialog = ({
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <WarningIcon mb={3} mr={5} />
             タスクを削除
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            本当にタスク「{taskName}」を削除してもよろしいですか？
+            本当にタスク「<Text as="b">{taskName}</Text>
+            」を削除してもよろしいですか？
           </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
               キャンセル
             </Button>
-            <Button colorScheme="red" onClick={onRemove} ml={3}>
+            <Button colorScheme="red" onClick={onRemove} ml={10}>
               削除
             </Button>
           </AlertDialogFooter>
