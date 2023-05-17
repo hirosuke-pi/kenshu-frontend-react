@@ -19,8 +19,8 @@ const ConfilmDialog = ({
 }: {
   isOpen: boolean;
   taskName: string;
-  onClose: any;
-  onRemove: any;
+  onClose: () => void;
+  onRemove: () => void;
 }) => {
   const cancelRef = useRef();
 
