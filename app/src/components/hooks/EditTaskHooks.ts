@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import moment from "moment";
 
@@ -23,66 +23,64 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState<FormStatus>("idle");
 
-  const onTaskEdit = (taskName: string) => {
-    if (taskName === "") {
-      setStatus("validationError");
-      return;
-    }
-    setStatus("loading");
+  const taskEditMutate = useMutation(patchTask, {
+    onSuccess: (data) => {
+      console.log(data);
+      setStatus("success");
+      taskQuery.taskiInvalidateQueries(queryClient);
 
-    patchTask({
+      setModalVisible(false);
+      setStatus("success");
+      toast({
+        title: "タスクを編集しました",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: (error) => {
+      console.error(error);
+      setStatus("responseError");
+    },
+  });
+  const taskDoneMutate = useMutation(patchTask, {
+    onSuccess: (data) => {
+      console.log(data);
+      taskQuery.taskiInvalidateQueries(queryClient);
+
+      setModalVisible(false);
+      setStatus("success");
+      toast({
+        title: "タスクを更新しました。",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onError: (error) => {
+      console.error(error);
+      toast({
+        title: "タスク完了中にエラーが発生しました。",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const onTaskEdit = (taskName: string) =>
+    taskEditMutate.mutate({
       taskName,
       id: task.id,
       finishedAt: task.finishedAt,
-    })
-      .then((response) => {
-        console.log(response.body);
-        taskQuery.taskiInvalidateQueries(queryClient);
+    });
 
-        setModalVisible(false);
-        setStatus("success");
-        toast({
-          title: "タスクを編集しました",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response);
-        setStatus("responseError");
-      });
-  };
-
-  const onTaskDone = () => {
-    patchTask({
+  const onTaskDone = () =>
+    taskDoneMutate.mutate({
       taskName: task.title,
       id: task.id,
       finishedAt: task.finishedAt ? null : moment().toISOString(),
-    })
-      .then((response) => {
-        console.log(response.body);
-        taskQuery.taskiInvalidateQueries(queryClient);
-
-        setModalVisible(false);
-        setStatus("success");
-        toast({
-          title: "タスクを更新しました。",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response);
-        toast({
-          title: "タスク完了中にエラーが発生しました。",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      });
-  };
+    });
 
   return {
     actions: {
@@ -99,8 +97,8 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
   };
 };
 
-const patchTask = async (props: PatchTaskProps): Promise<Response> => {
-  return fetch(`http://localhost:8000/api/tasks/${props.id}`, {
+const patchTask = async (props: PatchTaskProps): Promise<Task> => {
+  const response = await fetch(`http://localhost:8000/api/tasks/${props.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -110,4 +108,6 @@ const patchTask = async (props: PatchTaskProps): Promise<Response> => {
       finishedAt: props.finishedAt,
     }),
   });
+
+  return await response.json();
 };

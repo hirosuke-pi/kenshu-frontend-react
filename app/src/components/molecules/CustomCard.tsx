@@ -95,6 +95,7 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
               defaultValue={task.title}
               onClose={() => editTaskForm.actions.setModalVisible(false)}
               onSubmit={editTaskForm.actions.onTaskEdit}
+              setStatus={editTaskForm.actions.setStatus}
             />
             <IconButton
               colorScheme="red"

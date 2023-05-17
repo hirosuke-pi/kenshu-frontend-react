@@ -35,6 +35,7 @@ const TaskFormModal = ({
   defaultValue = "",
   onClose,
   onSubmit,
+  setStatus,
 }: {
   isOpen: boolean;
   modalTitle: string;
@@ -42,8 +43,18 @@ const TaskFormModal = ({
   defaultValue?: string;
   onClose: () => void;
   onSubmit: (taskName: string) => void;
+  setStatus: (status: FormStatus) => void;
 }) => {
   const [taskName, setTaskName] = useState(defaultValue);
+
+  const onSubmitForm = () => {
+    if (taskName === "") {
+      setStatus("validationError");
+      return;
+    }
+    setStatus("loading");
+    onSubmit(taskName);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -76,9 +87,7 @@ const TaskFormModal = ({
               width="100%"
               colorScheme="blue"
               mr={3}
-              onClick={() => {
-                onSubmit(taskName);
-              }}
+              onClick={onSubmitForm}
             >
               {status === "loading" ? (
                 <>

@@ -1,5 +1,5 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Task } from "./";
 import { taskQuery } from "../../lib";
@@ -17,29 +17,32 @@ export const useRemoveTaskForm = ({ task }: RemoveTaskFormHookProps) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const removeTaskMutate = useMutation(deleteTask, {
+    onSuccess: (result) => {
+      console.log(result);
+      taskQuery.taskiInvalidateQueries(queryClient);
+
+      toast({
+        title: `タスク「${task.title}」を削除しました。`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onError: (error) => {
+      console.error((error as any).response);
+      toast({
+        title: "タスク削除中にエラーが発生しました。",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
+
   const onTaskRemove = () => {
     onClose();
-    deleteTask({ id: task.id })
-      .then((response) => {
-        console.log(response.body);
-        taskQuery.taskiInvalidateQueries(queryClient);
-
-        toast({
-          title: `タスク「${task.title}」を削除しました。`,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response);
-        toast({
-          title: "タスク削除中にエラーが発生しました。",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      });
+    removeTaskMutate.mutate({ id: task.id });
   };
 
   return {

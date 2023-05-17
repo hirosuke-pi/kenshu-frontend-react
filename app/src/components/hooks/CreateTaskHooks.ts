@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 
-import { taskQuery } from "../../lib";
 import { FormStatus } from "../organisms";
+import { Task } from ".";
+import { taskQuery } from "../../lib";
 
 interface PostTaskProps {
   taskName: string;
@@ -15,34 +16,28 @@ export const useCreateTaskForm = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState<FormStatus>("idle");
 
-  const onPostTask = (taskName: string) => {
-    if (taskName === "") {
-      setStatus("validationError");
-      return;
-    }
-    setStatus("loading");
+  const createTaskMutate = useMutation(postTask, {
+    onSuccess: (result) => {
+      console.log(result);
+      taskQuery.taskiInvalidateQueries(queryClient);
 
-    postTask({
-      taskName,
-    })
-      .then((response) => {
-        console.log(response.body);
-        taskQuery.taskiInvalidateQueries(queryClient);
-
-        setModalVisible(false);
-        setStatus("success");
-        toast({
-          title: "タスクを作成しました",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        console.error(error.response);
-        setStatus("responseError");
+      setModalVisible(false);
+      setStatus("success");
+      toast({
+        title: "タスクを作成しました",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
-  };
+    },
+    onError: (error) => {
+      console.error(error);
+      setStatus("responseError");
+    },
+  });
+
+  const onPostTask = (taskName: string) =>
+    createTaskMutate.mutate({ taskName });
 
   return {
     actions: {
@@ -59,11 +54,13 @@ export const useCreateTaskForm = () => {
 };
 
 const postTask = async ({ taskName }: PostTaskProps): Promise<Response> => {
-  return fetch("http://localhost:8000/api/tasks", {
+  const response = await fetch("http://localhost:8000/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ title: taskName }),
   });
+
+  return await response.json();
 };

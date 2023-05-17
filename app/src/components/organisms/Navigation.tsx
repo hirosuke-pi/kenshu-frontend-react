@@ -24,6 +24,7 @@ const Navigation = () => {
         status={values.status}
         onClose={() => actions.setModalVisible(false)}
         onSubmit={actions.onPostTask}
+        setStatus={actions.setStatus}
       />
     </Flex>
   );
