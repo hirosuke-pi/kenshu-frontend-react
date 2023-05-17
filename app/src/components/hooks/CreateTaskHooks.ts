@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 
 import { FormStatus } from "../organisms";
-import { Task } from ".";
+import { TaskResponse } from "./";
 import { taskQuery } from "../../lib";
 
 interface PostTaskProps {
@@ -19,7 +19,6 @@ export const useCreateTaskForm = () => {
   const createTaskMutate = useMutation(postTask, {
     onSuccess: (result) => {
       console.log(result);
-      taskQuery.taskiInvalidateQueries(queryClient);
 
       setModalVisible(false);
       setStatus("success");
@@ -29,6 +28,8 @@ export const useCreateTaskForm = () => {
         duration: 5000,
         isClosable: true,
       });
+
+      taskQuery.setTaskCache(queryClient, result.task);
     },
     onError: (error) => {
       console.error(error);
@@ -53,7 +54,7 @@ export const useCreateTaskForm = () => {
   };
 };
 
-const postTask = async ({ taskName }: PostTaskProps): Promise<Response> => {
+const postTask = async ({ taskName }: PostTaskProps): Promise<TaskResponse> => {
   const response = await fetch("http://localhost:8000/api/tasks", {
     method: "POST",
     headers: {
@@ -62,5 +63,5 @@ const postTask = async ({ taskName }: PostTaskProps): Promise<Response> => {
     body: JSON.stringify({ title: taskName }),
   });
 
-  return await response.json();
+  return response.json();
 };

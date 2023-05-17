@@ -20,7 +20,6 @@ export const useRemoveTaskForm = ({ task }: RemoveTaskFormHookProps) => {
   const removeTaskMutate = useMutation(deleteTask, {
     onSuccess: (result) => {
       console.log(result);
-      taskQuery.taskiInvalidateQueries(queryClient);
 
       toast({
         title: `タスク「${task.title}」を削除しました。`,
@@ -28,6 +27,8 @@ export const useRemoveTaskForm = ({ task }: RemoveTaskFormHookProps) => {
         duration: 3000,
         isClosable: true,
       });
+
+      taskQuery.removeTaskCache(queryClient, task.id);
     },
     onError: (error) => {
       console.error((error as any).response);

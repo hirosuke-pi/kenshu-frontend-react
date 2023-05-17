@@ -4,7 +4,7 @@ import { useToast } from "@chakra-ui/react";
 import moment from "moment";
 
 import { taskQuery } from "../../lib";
-import { Task } from ".";
+import { Task, TaskResponse } from ".";
 import { FormStatus } from "../organisms";
 
 interface PatchTaskProps {
@@ -24,10 +24,9 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
   const [status, setStatus] = useState<FormStatus>("idle");
 
   const taskEditMutate = useMutation(patchTask, {
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: (result) => {
+      console.log(result);
       setStatus("success");
-      taskQuery.taskiInvalidateQueries(queryClient);
 
       setModalVisible(false);
       setStatus("success");
@@ -37,6 +36,8 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
         duration: 5000,
         isClosable: true,
       });
+
+      taskQuery.updateTaskCache(queryClient, result.task);
     },
     onError: (error) => {
       console.error(error);
@@ -44,9 +45,8 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
     },
   });
   const taskDoneMutate = useMutation(patchTask, {
-    onSuccess: (data) => {
-      console.log(data);
-      taskQuery.taskiInvalidateQueries(queryClient);
+    onSuccess: (result) => {
+      console.log(result);
 
       setModalVisible(false);
       setStatus("success");
@@ -56,6 +56,8 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
         duration: 3000,
         isClosable: true,
       });
+
+      taskQuery.updateTaskCache(queryClient, result.task);
     },
     onError: (error) => {
       console.error(error);
@@ -97,7 +99,7 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
   };
 };
 
-const patchTask = async (props: PatchTaskProps): Promise<Task> => {
+const patchTask = async (props: PatchTaskProps): Promise<TaskResponse> => {
   const response = await fetch(`http://localhost:8000/api/tasks/${props.id}`, {
     method: "PATCH",
     headers: {
