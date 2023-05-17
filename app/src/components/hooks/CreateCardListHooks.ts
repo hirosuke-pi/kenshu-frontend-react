@@ -8,7 +8,7 @@ export interface Task {
 }
 
 export const useCreateCardList = () => {
-  const { status, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ["tasks"],
     queryFn: fetchTasks,
   });
@@ -16,9 +16,7 @@ export const useCreateCardList = () => {
   return {
     actions: {},
     values: {
-      status,
       tasks: data?.tasks as Task[] | undefined,
-      error: (error as any)?.message as string | undefined,
     },
   };
 };
