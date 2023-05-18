@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
 interface DisplayTaskFormModalHookProps {
   onSubmit: (taskName: string) => void;
@@ -21,9 +21,12 @@ export const useDisplayTaskFormModal = (
     props.onSubmit(taskName);
   };
 
+  const onChangeTaskName = ((e) =>
+    setTaskName(e.target.value)) satisfies ChangeEventHandler<HTMLInputElement>;
+
   return {
     actions: {
-      setTaskName,
+      onChangeTaskName,
       onSubmitForm,
     },
     values: {

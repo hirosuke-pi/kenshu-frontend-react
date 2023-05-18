@@ -61,7 +61,7 @@ const TaskFormModal = ({
             <Input
               type="text"
               defaultValue={values.taskName}
-              onChange={(event) => actions.setTaskName(event.target.value)}
+              onChange={actions.onChangeTaskName}
             />
             <FormErrorMessage>{values.errorMessage}</FormErrorMessage>
           </FormControl>
