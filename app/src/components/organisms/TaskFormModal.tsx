@@ -56,7 +56,7 @@ const TaskFormModal = ({
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl isInvalid={values.errorMessage !== ""}>
+          <FormControl isInvalid={!!values.errorMessage}>
             <FormLabel>タスク名</FormLabel>
             <Input
               type="text"
