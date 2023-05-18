@@ -35,7 +35,8 @@ const CreateCardList = (): JSX.Element => {
 const LoadingFallback = (): JSX.Element => {
   return (
     <>
-      <Spinner mr={10} /> データを取得中...
+      <Spinner mr={10} />
+      データを取得中...
     </>
   );
 };

@@ -17,33 +17,34 @@ import {
   useToast,
   AlertDescription,
   Flex,
+  Box,
   Spinner,
+  Text,
 } from "@chakra-ui/react";
 import { EditIcon, CalendarIcon } from "@chakra-ui/icons";
-
-export type FormStatus =
-  | "idle"
-  | "loading"
-  | "success"
-  | "responseError"
-  | "validationError";
+import { useDisplayTaskFormModal } from "../hooks";
 
 const TaskFormModal = ({
   isOpen,
   modalTitle,
-  status,
+  isError,
+  isLoading,
   defaultValue = "",
   onClose,
   onSubmit,
 }: {
   isOpen: boolean;
   modalTitle: string;
-  status: FormStatus;
+  isError: boolean;
+  isLoading: boolean;
   defaultValue?: string;
   onClose: () => void;
   onSubmit: (taskName: string) => void;
 }) => {
-  const [taskName, setTaskName] = useState(defaultValue);
+  const { actions, values } = useDisplayTaskFormModal({
+    defaultValue,
+    onSubmit,
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -55,14 +56,14 @@ const TaskFormModal = ({
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl isInvalid={status === "validationError"}>
+          <FormControl isInvalid={!!values.errorMessage}>
             <FormLabel>タスク名</FormLabel>
             <Input
               type="text"
-              defaultValue={taskName}
-              onChange={(event) => setTaskName(event.target.value)}
+              defaultValue={values.taskName}
+              onChange={actions.onChangeTaskName}
             />
-            <FormErrorMessage>タスク名は必須です</FormErrorMessage>
+            <FormErrorMessage>{values.errorMessage}</FormErrorMessage>
           </FormControl>
         </ModalBody>
         <ModalFooter>
@@ -76,22 +77,11 @@ const TaskFormModal = ({
               width="100%"
               colorScheme="blue"
               mr={3}
-              onClick={() => {
-                onSubmit(taskName);
-              }}
+              onClick={actions.onSubmitForm}
             >
-              {status === "loading" ? (
-                <>
-                  <Spinner mr={5} /> 送信中...
-                </>
-              ) : (
-                <>
-                  <EditIcon mr={5} mb={3} />
-                  タスクを登録
-                </>
-              )}
+              {isLoading ? <LoadingSpinner /> : <TaskPushText />}
             </Button>
-            {status === "responseError" && (
+            {isError && (
               <Alert status="error" mt={10}>
                 <AlertIcon />
                 <AlertDescription>タスク登録に失敗しました。</AlertDescription>
@@ -101,6 +91,24 @@ const TaskFormModal = ({
         </ModalFooter>
       </ModalContent>
     </Modal>
+  );
+};
+
+const LoadingSpinner = (): JSX.Element => {
+  return (
+    <Flex justifyContent="center" alignItems="center">
+      <Spinner mr={5} />
+      <Text>送信中...</Text>
+    </Flex>
+  );
+};
+
+const TaskPushText = (): JSX.Element => {
+  return (
+    <Flex justifyContent="center" alignItems="center">
+      <EditIcon />
+      <Text>タスクを登録</Text>
+    </Flex>
   );
 };
 

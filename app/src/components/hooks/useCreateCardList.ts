@@ -7,6 +7,14 @@ export interface Task {
   finishedAt?: string | null;
 }
 
+export interface TaskResponse {
+  task: Task;
+}
+
+export interface TasksResponse {
+  tasks: Task[];
+}
+
 export const useCreateCardList = () => {
   const { data } = useQuery({
     queryKey: ["tasks"],
