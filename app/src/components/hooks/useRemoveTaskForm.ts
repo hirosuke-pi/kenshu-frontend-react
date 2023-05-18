@@ -2,7 +2,7 @@ import { useDisclosure, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Task } from "./";
-import { taskQuery } from "../../lib";
+import { customToast, taskQuery } from "../../lib";
 
 interface RemoveTaskFormHookProps {
   task: Task;
@@ -21,23 +21,18 @@ export const useRemoveTaskForm = ({ task }: RemoveTaskFormHookProps) => {
     onSuccess: (result) => {
       console.log(result);
 
-      toast({
-        title: `タスク「${task.title}」を削除しました。`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
+      customToast.successToast(
+        toast,
+        `タスク「${task.title}」を削除しました。`
+      );
       taskQuery.removeTaskCache(queryClient, task.id);
     },
     onError: (error) => {
       console.error((error as any).response);
-      toast({
-        title: "タスク削除中にエラーが発生しました。",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      customToast.errorToast(
+        toast,
+        `タスク「${task.title}」の削除時にエラーが発生しました。`
+      );
     },
   });
 

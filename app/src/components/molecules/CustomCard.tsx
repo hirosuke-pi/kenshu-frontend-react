@@ -24,7 +24,7 @@ import {
 import { useEditTaskForm, useRemoveTaskForm, Task } from "../hooks";
 import { TaskFormModal } from "../organisms";
 import { datetime } from "../../lib";
-import { TaskDeletionConfirmDialog } from ".";
+import { TaskDeletionConfirmDialog } from "./";
 
 import taskImage from "../../public/images/task.jpg";
 
@@ -91,11 +91,11 @@ const CustomCard = ({ task }: { task: Task }): JSX.Element => {
             <TaskFormModal
               isOpen={editTaskForm.values.modalVisible}
               modalTitle="タスクを編集"
-              status={editTaskForm.values.status}
               defaultValue={task.title}
               onClose={() => editTaskForm.actions.setModalVisible(false)}
               onSubmit={editTaskForm.actions.onTaskEdit}
-              setStatus={editTaskForm.actions.setStatus}
+              isError={editTaskForm.values.isErrorModal}
+              isLoading={editTaskForm.values.isLoadingModal}
             />
             <IconButton
               colorScheme="red"
