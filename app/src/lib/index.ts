@@ -1,5 +1,5 @@
 import * as datetime from "./datetime";
 import * as taskQuery from "./taskQuery";
-import * as customToast from "./customToast";
+import * as toast from "./toast";
 
-export { datetime, taskQuery, customToast };
+export { datetime, taskQuery, toast };

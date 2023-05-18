@@ -1,8 +1,8 @@
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Task } from "./";
-import { customToast, taskQuery } from "../../lib";
+import { taskQuery, toast } from "../../lib";
 
 interface RemoveTaskFormHookProps {
   task: Task;
@@ -14,25 +14,23 @@ interface DeleteTaskProps {
 
 export const useRemoveTaskForm = ({ task }: RemoveTaskFormHookProps) => {
   const queryClient = useQueryClient();
-  const toast = useToast();
+  const { showToast } = toast.useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const removeTaskMutate = useMutation(deleteTask, {
     onSuccess: (result) => {
       console.log(result);
 
-      customToast.successToast(
-        toast,
-        `タスク「${task.title}」を削除しました。`
-      );
+      showToast("success", {
+        title: `タスク「${task.title}」を削除しました。`,
+      });
       taskQuery.removeTaskCache(queryClient, task.id);
     },
     onError: (error) => {
       console.error((error as any).response);
-      customToast.errorToast(
-        toast,
-        `タスク「${task.title}」の削除時にエラーが発生しました。`
-      );
+      showToast("error", {
+        title: `タスク「${task.title}」の削除時にエラーが発生しました。`,
+      });
     },
   });
 

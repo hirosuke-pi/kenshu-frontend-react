@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@chakra-ui/react";
 import moment from "moment";
 
-import { taskQuery, customToast } from "../../lib";
+import { taskQuery, toast } from "../../lib";
 import { Task, TaskResponse } from "./";
 
 interface PatchTaskProps {
@@ -18,7 +17,7 @@ interface TaskEditHookProps {
 
 export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
   const queryClient = useQueryClient();
-  const toast = useToast();
+  const { showToast } = toast.useToast();
   const [modalVisible, setModalVisible] = useState(false);
 
   const taskEditMutation = useMutation(patchTask, {
@@ -26,7 +25,7 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
       console.log(result);
 
       setModalVisible(false);
-      customToast.successToast(toast, "タスクを編集しました");
+      showToast("success", { title: "タスクを編集しました" });
 
       taskQuery.updateTaskCache(queryClient, result.task);
     },
@@ -39,13 +38,13 @@ export const useEditTaskForm = ({ task }: TaskEditHookProps) => {
       console.log(result);
 
       setModalVisible(false);
-      customToast.successToast(toast, "タスクを更新しました。");
+      showToast("success", { title: "タスクを更新しました。" });
 
       taskQuery.updateTaskCache(queryClient, result.task);
     },
     onError: (error) => {
       console.error(error);
-      customToast.errorToast(toast, "タスク完了中にエラーが発生しました。");
+      showToast("error", { title: "タスク完了中にエラーが発生しました。" });
     },
   });
 

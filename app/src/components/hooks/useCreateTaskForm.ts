@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@chakra-ui/react";
 
-import { FormStatus } from "../organisms";
 import { TaskResponse } from "./";
-import { customToast, taskQuery } from "../../lib";
+import { taskQuery } from "../../lib";
+import { toast } from "../../lib";
 
 interface PostTaskProps {
   taskName: string;
@@ -12,7 +11,7 @@ interface PostTaskProps {
 
 export const useCreateTaskForm = () => {
   const queryClient = useQueryClient();
-  const toast = useToast();
+  const { showToast } = toast.useToast();
   const [modalVisible, setModalVisible] = useState(false);
 
   const createTaskMutation = useMutation(postTask, {
@@ -20,7 +19,7 @@ export const useCreateTaskForm = () => {
       console.log(result);
 
       setModalVisible(false);
-      customToast.successToast(toast, "タスクを作成しました");
+      showToast("success", { title: "タスクを作成しました" });
 
       taskQuery.setTaskCache(queryClient, result.task);
     },
