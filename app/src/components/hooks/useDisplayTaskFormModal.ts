@@ -1,14 +1,14 @@
 import { ChangeEventHandler, useState } from "react";
 
-interface DisplayTaskFormModalHookProps {
+interface DisplayTaskFormModalHookOptions {
   onSubmit: (taskName: string) => void;
   defaultValue?: string;
 }
 
 export const useDisplayTaskFormModal = (
-  props: DisplayTaskFormModalHookProps
+  options: DisplayTaskFormModalHookOptions
 ) => {
-  const [taskName, setTaskName] = useState(props.defaultValue ?? "");
+  const [taskName, setTaskName] = useState(options.defaultValue ?? "");
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmitForm = () => {
@@ -18,7 +18,7 @@ export const useDisplayTaskFormModal = (
     }
 
     setErrorMessage("");
-    props.onSubmit(taskName);
+    options.onSubmit(taskName);
   };
 
   const onChangeTaskName = ((e) =>
